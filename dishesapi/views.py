@@ -5,7 +5,7 @@ from django.shortcuts import render
 from dishesapi.models import Dishes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from dishesapi.serializers import DishesSerializer
+from dishesapi.serializers import DishesSerializer,DishesModelSerializer
 from rest_framework import status
 
 #url: restaurant/dishes/
@@ -58,6 +58,49 @@ class DishesDetailView(APIView):
         try:
             object=Dishes.objects.get(id=id)
             object.delete()
+            return Response({"msg":"deleted"})
+        except:
+            return Response({"msg":"doesn't exist"},status=status.HTTP_404_NOT_FOUND)
+
+class DishesModelView(APIView):
+    def get(self,request,*args,**kwargs):
+        qs=Dishes.objects.all()
+        serializer=DishesModelSerializer(qs,many=True)
+        return Response(data=serializer.data)
+    def post(self,request,*args,**kwargs):
+        serializer=DishesModelSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data)
+        else:
+            return Response(data=serializer.errors)
+
+class DishesDetailModelView(APIView):
+    def get(self,req,*args,**kwargs):
+        id=kwargs.get("id")
+        try:
+            qs=Dishes.objects.get(id=id)
+            serializer=DishesModelSerializer(qs)
+            return Response(data=serializer.data)
+        except:
+            return Response({"msg":"doesn't exist"},status=status.HTTP_404_NOT_FOUND)
+    def put(self,req,*args,**kwargs):
+        id=kwargs.get("id")
+        try:
+            instance=Dishes.objects.get(id=id)
+            serializer=DishesModelSerializer(data=req.data,instance=instance)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(data=serializer.data)
+            else:
+                return Response(data=serializer.errors)
+        except:
+            return Response({"msg":"doesn't exist"},status=status.HTTP_404_NOT_FOUND)
+    def delete(self,req,*args,**kwargs):
+        id=kwargs.get("id")
+        try:
+            qs=Dishes.objects.get(id=id)
+            qs.delete()
             return Response({"msg":"deleted"})
         except:
             return Response({"msg":"doesn't exist"},status=status.HTTP_404_NOT_FOUND)

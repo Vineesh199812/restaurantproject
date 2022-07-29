@@ -19,6 +19,8 @@ from dishesapi import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('restaurant/dishes/',views.DishesView.as_view()),
-    path('restaurant/dishes/<int:id>',views.DishesDetailView.as_view()),
+    path('api/v1/restaurant/dishes/',views.DishesView.as_view()),
+    path('api/v1/restaurant/dishes/<int:id>',views.DishesDetailView.as_view()),
+    path('api/v2/restaurant/dishes/',views.DishesModelView.as_view()),
+    path('api/v2/restaurant/dishes/<int:id>',views.DishesDetailModelView.as_view()),
 ]
