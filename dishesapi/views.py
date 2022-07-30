@@ -6,7 +6,7 @@ from dishesapi.models import Dishes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from dishesapi.serializers import DishesSerializer,DishesModelSerializer
-from rest_framework import status
+from rest_framework import status,viewsets
 
 #url: restaurant/dishes/
 #get: to get all the dishes
@@ -104,3 +104,43 @@ class DishesDetailModelView(APIView):
             return Response({"msg":"deleted"})
         except:
             return Response({"msg":"doesn't exist"},status=status.HTTP_404_NOT_FOUND)
+
+class DishesViewSetView(viewsets.ViewSet):
+    def list(self,request,*args,**kwargs):
+        qs=Dishes.objects.all()
+        serializer=DishesModelSerializer(qs,many=True)
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
+
+    def create(self,request,*args,**kwargs):
+        serializer=DishesModelSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data,status=status.HTTP_201_CREATED)
+        else:
+            return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self,request,*args,**kwargs):
+        id=kwargs.get("pk")    # pk ==> primary key(instead of id)
+        object=Dishes.objects.get(id=id)
+        serializer=DishesModelSerializer(data=request.data,instance=object)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self,request,*args,**kwargs):
+        id=kwargs.get("pk")
+        qs=Dishes.objects.get(id=id)
+        qs.delete()
+        return Response({"msg":"deleted"},status=status.HTTP_200_OK)
+
+    def retrieve(self,req,*args,**kwargs):
+        id=kwargs.get("pk")
+        object=Dishes.objects.get(id=id)
+        serializer=DishesModelSerializer(object)
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
+
+class DishesModelViewSetView(viewsets.ModelViewSet):
+    serializer_class = DishesModelSerializer
+    queryset = Dishes.objects.all()

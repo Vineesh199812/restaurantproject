@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from dishesapi import views
+from rest_framework.routers import DefaultRouter
+router=DefaultRouter()
+router.register("api/v3/restaurant/dishes",views.DishesViewSetView,basename="dishes")
+router.register("api/v4/restaurant/dishes",views.DishesModelViewSetView,basename="dishes")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,4 +27,4 @@ urlpatterns = [
     path('api/v1/restaurant/dishes/<int:id>',views.DishesDetailView.as_view()),
     path('api/v2/restaurant/dishes/',views.DishesModelView.as_view()),
     path('api/v2/restaurant/dishes/<int:id>',views.DishesDetailModelView.as_view()),
-]
+]+router.urls
