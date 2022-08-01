@@ -5,8 +5,9 @@ from django.shortcuts import render
 from dishesapi.models import Dishes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from dishesapi.serializers import DishesSerializer,DishesModelSerializer
+from dishesapi.serializers import DishesSerializer,DishesModelSerializer,UserSerializer
 from rest_framework import status,viewsets
+from django.contrib.auth.models import User
 
 #url: restaurant/dishes/
 #get: to get all the dishes
@@ -144,3 +145,7 @@ class DishesViewSetView(viewsets.ViewSet):
 class DishesModelViewSetView(viewsets.ModelViewSet):
     serializer_class = DishesModelSerializer
     queryset = Dishes.objects.all()
+
+class UserRegistrationView(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()

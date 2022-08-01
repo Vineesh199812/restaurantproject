@@ -20,6 +20,7 @@ from rest_framework.routers import DefaultRouter
 router=DefaultRouter()
 router.register("api/v3/restaurant/dishes",views.DishesViewSetView,basename="dishes")
 router.register("api/v4/restaurant/dishes",views.DishesModelViewSetView,basename="dishes")
+router.register("api/v5/accounts/register",views.UserRegistrationView,basename="registration")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
