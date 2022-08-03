@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from dishesapi import views
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken.views import obtain_auth_token
+
 router=DefaultRouter()
 router.register("api/v3/restaurant/dishes",views.DishesViewSetView,basename="dishes")
 router.register("api/v4/restaurant/dishes",views.DishesModelViewSetView,basename="dishes")
@@ -28,4 +30,5 @@ urlpatterns = [
     path('api/v1/restaurant/dishes/<int:id>',views.DishesDetailView.as_view()),
     path('api/v2/restaurant/dishes/',views.DishesModelView.as_view()),
     path('api/v2/restaurant/dishes/<int:id>',views.DishesDetailModelView.as_view()),
+    path('accounts/token',obtain_auth_token),
 ]+router.urls

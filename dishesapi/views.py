@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from dishesapi.serializers import DishesSerializer,DishesModelSerializer,UserSerializer
 from rest_framework import status,viewsets
 from django.contrib.auth.models import User
+from rest_framework import authentication,permissions
 
 #url: restaurant/dishes/
 #get: to get all the dishes
@@ -143,6 +144,9 @@ class DishesViewSetView(viewsets.ViewSet):
         return Response(data=serializer.data,status=status.HTTP_200_OK)
 
 class DishesModelViewSetView(viewsets.ModelViewSet):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
     serializer_class = DishesModelSerializer
     queryset = Dishes.objects.all()
 
