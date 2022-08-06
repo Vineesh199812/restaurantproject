@@ -1,7 +1,7 @@
 
 
 from rest_framework import serializers
-from dishesapi.models import Dishes
+from dishesapi.models import Dishes,Reviews
 from django.contrib.auth.models import User
 
 class DishesSerializer(serializers.Serializer):
@@ -40,3 +40,13 @@ class UserSerializer(serializers.ModelSerializer):
         ]
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Reviews
+        fields=["review","rating"]
+
+    def create(self, validated_data):
+        user=self.context.get("user")
+        dish=self.context.get("dish")
+        return Reviews.objects.create(customer=user,dish=dish,**validated_data)
